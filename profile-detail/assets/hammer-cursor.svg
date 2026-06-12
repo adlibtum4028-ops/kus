@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+  <g transform="rotate(-20 18 18)">
+    <!-- handle (wood) -->
+    <rect x="14.5" y="12" width="6" height="22" rx="3" fill="#b07a43" stroke="#2a1a0a" stroke-width="1.7"/>
+    <!-- head (metal) -->
+    <rect x="5" y="3.5" width="25" height="11.5" rx="3" fill="#d4d8dd" stroke="#1c1c1c" stroke-width="1.7"/>
+    <!-- darker striking face -->
+    <rect x="23.5" y="3.5" width="6.5" height="11.5" rx="3" fill="#a7adb4" stroke="#1c1c1c" stroke-width="1.7"/>
+    <!-- highlight -->
+    <rect x="8" y="6" width="13" height="2.4" rx="1.2" fill="#eef0f2"/>
+  </g>
+</svg>
