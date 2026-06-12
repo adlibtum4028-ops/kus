@@ -1,0 +1,1098 @@
+/* ===== KUS Player Profile — reconstructed from Figma (1920 x 2130) ===== */
+
+/* Figma display font used on the left-column buttons */
+@font-face {
+  font-family: "GangwonEduPower";
+  src: url("assets/GangwonEduPower.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --gray-1000: #0f0f0f;
+  --gray-900: #161616;
+  --gray-700: #232323;
+  --gray-600: #2d2d2d;
+  --gray-500: #383838;
+  --gray-300: #737373;
+  --gray-200: #a4a4a4;
+  --primary-500: #34ff67;
+  --primary-rgb: 52, 255, 103; /* accent in RGB form for rgba() — drives theming */
+  --red: #ff5c5c;
+  --white: #fff;
+  --black: #000;
+  --font-body: "Inter", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-display: "Special Gothic Expanded One", "Inter", sans-serif;
+  --font-kr: "Apple SD Gothic Neo", "Malgun Gothic", "Inter", sans-serif;
+  --font-display-kr: "GangwonEduPower", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: #0b0b0b;
+  overscroll-behavior-y: none; /* block the upward overscroll/bounce at the top */
+}
+body {
+  display: flex;
+  justify-content: center;
+  /* let the tall page scroll naturally */
+  overflow-x: hidden;
+}
+
+/* Theme A: dark backdrop (the lightning sits on the fixed .bg-fixed layer) */
+body:not(.theme-inzoi) { background-color: #0f0f0f; } /* Figma gray/1000 */
+
+/* Theme A updated card colors (Figma 663:16169) — color only, scoped to theme A */
+body:not(.theme-inzoi) .panel { background: #1c1c1c; }            /* cards: gray/800 (was #000) */
+body:not(.theme-inzoi) .focus-panel {
+  background: linear-gradient(180deg, #1c1c1c 0%, #162019 100%);
+  border-color: #2d2d2d;                                          /* gray/600 */
+}
+/* keep the hover stroke change on the focus panel (this override would otherwise beat .panel:hover) */
+body:not(.theme-inzoi) .focus-panel:hover { border-color: rgba(var(--primary-rgb), 0.5); }
+body:not(.theme-inzoi) .mp-kv-fade {
+  background: linear-gradient(90deg, #1c1c1c 0%, rgba(28, 28, 28, 0.4) 55%, rgba(28, 28, 28, 0) 100%);
+}
+
+/* Lightning shapes FIXED to the viewport — they stay put while content scrolls.
+   It lives OUTSIDE the scaled frame so position:fixed works; scaled via --scale. */
+.bg-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+body.theme-inzoi .bg-fixed { display: none; } /* theme A only */
+.bg-fixed img {
+  position: absolute;
+  left: calc(-190px * var(--scale, 1));
+  top: calc(-151px * var(--scale, 1));
+  width: calc(2331.85px * var(--scale, 1));
+  height: calc(795.78px * var(--scale, 1));
+  animation: glowPulse 6s ease-in-out infinite; /* gentle static glow on the shards */
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
+/* electricity flowing along the #B0FFC4 shapes (overlay traces their outline) */
+.bolt-flow {
+  position: absolute;
+  left: calc(-190px * var(--scale, 1));
+  top: calc(-151px * var(--scale, 1));
+  width: calc(2331.85px * var(--scale, 1));
+  height: calc(795.78px * var(--scale, 1));
+  overflow: visible;
+  pointer-events: none;
+}
+.bolt-flow .flow-path {
+  fill: none;
+  stroke: #c8ffd9;
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 16 84; /* pathLength=100 → one ~16% glowing segment */
+  filter: drop-shadow(0 0 5px #b0ffc4) drop-shadow(0 0 13px #34ff67);
+  animation: boltFlow 2.4s linear infinite;
+}
+.bolt-flow .p2 { animation-duration: 3.1s; animation-delay: -1.2s; }
+/* speed varies: faster "zap" bursts then slow drift, twice per loop.
+   Peak speed is capped (bursts spread over more time + gentle easing) so the
+   segment stays visible even at its fastest. */
+@keyframes boltFlow {
+  0%   { stroke-dashoffset: 0;    animation-timing-function: cubic-bezier(0.35, 0.55, 0.45, 1); } /* gentle zip */
+  30%  { stroke-dashoffset: -44;  animation-timing-function: linear; }                            /* slow drift */
+  56%  { stroke-dashoffset: -54;  animation-timing-function: cubic-bezier(0.35, 0.55, 0.45, 1); } /* gentle zip */
+  86%  { stroke-dashoffset: -98;  animation-timing-function: linear; }                            /* slow drift */
+  100% { stroke-dashoffset: -100; }
+}
+
+/* Scale the 1920-wide canvas to viewport width */
+.stage {
+  position: relative;
+  z-index: 1; /* above the fixed lightning backdrop */
+  width: 100vw;
+  /* real height is set by JS (frame height * scale) so scroll length is correct */
+  height: calc(100vw * 2130 / 1920);
+  overflow: hidden;
+}
+.frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 2130px;
+  background: transparent; /* dark backdrop is on the fixed body bg (theme A) */
+  overflow: hidden;
+  transform-origin: top left;
+  /* --scale is set by script.js = innerWidth / 1920 */
+  transform: scale(var(--scale, 1));
+  font-family: var(--font-body);
+  color: var(--white);
+}
+
+/* ---------- background glow ---------- */
+/* the in-frame lightning now lives on the fixed body background (theme A) */
+.bg-glow { display: none; }
+
+/* ============ reveal-on-scroll animation ============ */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* right-column content: slower + sequential (per-element delay set by JS) */
+.reveal.seq {
+  transform: translateY(40px);
+  transition: opacity 1.1s ease, transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* keep .in LAST so its transform:none wins the specificity tie over .reveal.seq */
+.reveal.in { opacity: 1; transform: none; }
+
+/* ---------- profile status bar ---------- */
+.status-bar {
+  position: absolute;
+  left: 312px;
+  top: 116px;
+  width: max-content;       /* hug the text so the bubble grows while typing */
+  max-width: 760px;
+  padding: 11px 12px;
+  background: var(--gray-500);
+  display: flex;
+  align-items: center;
+  overflow: visible;
+}
+.status-bar p {
+  font-size: 16px;
+  line-height: 22px;
+  white-space: pre;         /* preserve spaces + no wrap */
+  display: inline-flex;
+  align-items: center;
+}
+/* blinking typewriter caret */
+.status-bar .caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 2px;
+  background: currentColor;
+  animation: caretBlink 1s steps(1) infinite;
+}
+@keyframes caretBlink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+.status-caret {
+  position: absolute;
+  left: 329px;
+  top: 160px;
+  width: 15px;
+  height: 17px;
+  transform: rotate(-90deg);
+}
+
+/* ---------- profile photo ---------- */
+.green-square {
+  position: absolute;
+  left: 312px;
+  top: 186px;
+  width: 408px;
+  height: 408px;
+  background: var(--primary-500);
+}
+.profile-photo {
+  position: absolute;
+  left: 330px;
+  top: 204px;
+  width: 372px;
+  height: 372px;
+  overflow: hidden;
+}
+.profile-photo img,
+.profile-photo video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+.profile-photo:hover img,
+.profile-photo:hover video { transform: scale(1.06); }
+
+/* ---------- diagonal Achiever tape ---------- */
+.tape {
+  position: absolute;
+  left: 240px;
+  top: 500px;
+  width: 480px;
+  height: 80px;
+  transform: rotate(4.15deg);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  z-index: 5;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.45));
+}
+.tape-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.tape-text {
+  position: relative;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  /* spacing via margin (not gap) so the two halves are exactly equal,
+     making the -50% loop perfectly seamless */
+  animation: tapeScroll 6s linear infinite;
+  will-change: transform;
+}
+.tape-text .medal { font-size: 20px; margin-right: 18px; }
+.tape-text .ach { font-size: 22px; color: var(--black); margin-right: 18px; }
+@keyframes tapeScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  position: absolute;
+  left: 312px;
+  width: 408px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  font-family: var(--font-display-kr);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 28px;
+  color: var(--black);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, filter 0.2s ease;
+}
+.btn-share {
+  top: 647px;
+  background: radial-gradient(circle at center, var(--primary-500) 0%, color-mix(in srgb, var(--primary-500) 78%, #fff) 50%, color-mix(in srgb, var(--primary-500) 55%, #fff) 100%);
+}
+.btn-change {
+  top: 731px;
+  background: var(--white);
+}
+.btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
+.btn-share:hover { box-shadow: 0 10px 28px rgba(var(--primary-rgb), 0.45); }
+.btn-change:hover { box-shadow: 0 10px 24px rgba(255, 255, 255, 0.22); }
+.btn:active { transform: translateY(0); }
+
+/* ---------- header ---------- */
+.username {
+  position: absolute;
+  left: 756px;
+  top: 133px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 34px;
+  white-space: nowrap;
+}
+.user-num {
+  position: absolute;
+  left: 1325px;
+  top: 133px;
+  background: #0f2f2c;
+  padding: 6px 12px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 22px;
+  color: var(--primary-500);
+}
+.player-meta {
+  position: absolute;
+  left: 759px;
+  top: 211px;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+.pm-item { display: flex; gap: 12px; align-items: center; white-space: nowrap; }
+.pm-label { font-size: 14px; line-height: 20px; color: var(--gray-300); }
+.pm-value { font-family: var(--font-display); font-size: 16px; line-height: 22px; }
+.pm-ticket { display: flex; gap: 8px; align-items: center; }
+.pm-ticket img { width: 20px; height: 20px; object-fit: cover; }
+
+.header-divider {
+  position: absolute;
+  left: 756px;
+  top: 189px;
+  width: 852px;
+  height: 1px;
+  background: var(--gray-700);
+}
+.header-divider-glow {
+  position: absolute;
+  left: 770px;
+  top: 189px;
+  width: 824px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(var(--primary-rgb), 0) 0%, var(--primary-500) 49%, rgba(var(--primary-rgb), 0) 100%);
+  filter: drop-shadow(0 0 4px rgba(var(--primary-rgb), 0.6));
+}
+
+/* ---------- shared panel ---------- */
+.panel {
+  position: absolute;
+  background: var(--black);
+  border: 1px solid var(--gray-700);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+.panel:hover {
+  border-color: rgba(var(--primary-rgb), 0.5);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(var(--primary-rgb), 0.15);
+}
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 28px;
+}
+.v-divider { width: 1px; height: 44.5px; background: var(--gray-700); flex-shrink: 0; }
+
+/* ---------- top stats panel ---------- */
+.stats-panel {
+  left: 756px;
+  top: 267px;
+  width: 852px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 20px 24px;
+}
+.sp-rank { display: flex; gap: 20px; align-items: center; width: 448px; }
+.sp-top {
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 52px;
+  color: var(--primary-500);
+  white-space: nowrap;
+}
+.sp-rank-txt { display: flex; flex-direction: column; gap: 4px; width: 225px; }
+.sp-rank-title { font-family: var(--font-display); font-size: 16px; line-height: 22px; }
+.sp-rank-sub { font-size: 14px; line-height: 20px; color: var(--gray-300); }
+.sp-rank-sub b { color: var(--white); font-weight: 700; }
+.sp-stat { flex: 1 0 0; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.sp-stat-label { font-size: 14px; line-height: 20px; color: var(--gray-300); }
+.sp-stat-value {
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 34px;
+  color: var(--primary-500);
+}
+
+/* ---------- most played ---------- */
+.most-played {
+  left: 756px;
+  top: 372px;
+  width: 852px;
+  height: 256px;
+  overflow: hidden;
+}
+.mp-kv {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 489px;
+  height: 248px;
+  overflow: hidden;
+}
+.mp-kv img {
+  width: 105%;
+  height: 117%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  position: absolute;
+  inset: 0;
+}
+.mp-kv-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.4) 55%, rgba(0, 0, 0, 0) 100%);
+}
+.mp-title { position: absolute; left: 26px; top: 20px; }
+.mp-logo { position: absolute; left: 30px; top: 104px; width: 139px; height: 47px; object-fit: contain; }
+.mp-stats {
+  position: absolute;
+  left: 29px;
+  top: 172px;
+  display: flex;
+  gap: 26px;
+  align-items: center;
+}
+.mp-stat { width: 133px; display: flex; flex-direction: column; gap: 2px; }
+.mp-stat-value { font-family: var(--font-display); font-size: 24px; line-height: 34px; }
+
+/* ---------- player focus ---------- */
+.focus-panel {
+  left: 756px;
+  top: 648px;
+  width: 852px;
+  height: 482px;
+  background: linear-gradient(180deg, #000 0%, #162019 100%);
+}
+.focus-title { position: absolute; left: 24px; top: 27px; }
+.focus-legend {
+  position: absolute;
+  left: 632px;
+  top: 29px;
+  display: flex;
+  gap: 20px;
+}
+.focus-legend .lg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--gray-300);
+  white-space: nowrap;
+}
+.focus-legend .lg img { width: 17px; height: 2px; }
+
+/* radar */
+.radar {
+  position: absolute;
+  left: 127px;  /* 883 - 756 */
+  top: 136px;   /* 784 - 648 */
+  width: 258px;
+  height: 258px;
+}
+.radar img { position: absolute; }
+
+/* grid springs in first */
+.radar-grid {
+  left: 0; top: 0; width: 258px; height: 258px;
+  opacity: 0; transform: scale(0.82); transform-origin: center;
+  transition: opacity 0.5s ease 0.1s, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
+}
+.focus-panel.in .radar-grid { opacity: 1; transform: scale(1); }
+
+/* average (gray) polygon springs in */
+.radar-avg {
+  left: 41px; top: 51px; width: 166.5px; height: 162.5px;
+  opacity: 0; transform: scale(0.6); transform-origin: center;
+  transition: opacity 0.6s ease 0.35s, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s;
+}
+.focus-panel.in .radar-avg { opacity: 1; transform: scale(1); }
+
+/* user (green) polygon — dramatic pop + glow flash, then gentle ongoing pulse */
+.radar-user {
+  left: 62px; top: 23px; width: 160.5px; height: 182.5px;
+  opacity: 0; transform: scale(0.85); transform-origin: center;
+  filter: drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.5));
+}
+.focus-panel.in .radar-user {
+  animation: radarPop 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) 0.55s both,
+             radarGlow 2.6s ease-in-out 1.4s infinite;
+}
+@keyframes radarPop {
+  0%   { opacity: 0; transform: scale(0.15); filter: drop-shadow(0 0 0 rgba(var(--primary-rgb), 0)); }
+  55%  { opacity: 1; transform: scale(1.16); filter: drop-shadow(0 0 24px rgba(var(--primary-rgb), 1)); }
+  100% { opacity: 1; transform: scale(1);    filter: drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.55)); }
+}
+@keyframes radarGlow {
+  0%, 100% { filter: drop-shadow(0 0 7px rgba(var(--primary-rgb), 0.5)); }
+  50%      { filter: drop-shadow(0 0 17px rgba(var(--primary-rgb), 0.9)); }
+}
+
+/* expanding ping ring radiating from the centre */
+.radar::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 70px; height: 70px;
+  border: 2px solid rgba(var(--primary-rgb), 0.85);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.2);
+  opacity: 0;
+  pointer-events: none;
+}
+.focus-panel.in .radar::after { animation: radarPing 1s ease-out 0.6s; }
+@keyframes radarPing {
+  0%   { opacity: 0.9; transform: translate(-50%, -50%) scale(0.2); }
+  100% { opacity: 0;   transform: translate(-50%, -50%) scale(3.4); }
+}
+
+/* dots pop last */
+.radar-dot {
+  width: 8px; height: 8px;
+  opacity: 0; transform: scale(0); transform-origin: center;
+}
+.focus-panel.in .radar-dot { animation: dotPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.focus-panel.in .radar-dot.d1 { animation-delay: 1.3s; }
+.focus-panel.in .radar-dot.d2 { animation-delay: 1.45s; }
+@keyframes dotPop {
+  0%   { opacity: 0; transform: scale(0); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.radar-dot.d1 { left: 125px; top: 19px; }   /* 1008-883, 803-784 */
+.radar-dot.d2 { left: 219px; top: 147px; }  /* 1102-883, 931-784 */
+
+/* radar axis labels (positions relative to panel @ 756/648) */
+.axis {
+  position: absolute;
+  font-size: 14px;
+  line-height: 20px;
+  white-space: nowrap;
+  color: var(--gray-300);
+}
+.axis.a-top { left: 217.5px; top: 106px; color: var(--white); font-weight: 700; } /* 973.5,754 */
+.axis.a-tr  { left: 371px;  top: 167px; }                                          /* 1127,815 */
+.axis.a-r   { left: 400.5px; top: 287px; color: var(--white); font-weight: 700; }  /* 1156.5,935 */
+.axis.a-br  { left: 313px;  top: 396px; }                                          /* 1069,1044 */
+.axis.a-bl  { left: 126px;  top: 394px; }                                          /* 882,1042 */
+.axis.a-l   { left: 37px;   top: 287px; }                                          /* 793,935 */
+.axis.a-tl  { left: 58px;   top: 167px; }                                          /* 814,815 */
+
+/* focus description (right column) */
+.focus-pill {
+  position: absolute;
+  left: 554px;  /* 1310-756 */
+  top: 142px;   /* 790-648 */
+  background: var(--primary-500);
+  border-radius: 60px;
+  padding: 3px 8px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 20px;
+  color: var(--primary-500);
+}
+.focus-name {
+  position: absolute;
+  left: 555px;
+  top: 174px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 34px;
+}
+.focus-desc {
+  position: absolute;
+  left: 554px;
+  top: 216px;
+  width: 265px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--gray-200);
+}
+.focus-stat {
+  position: absolute;
+  left: 554px;
+  top: 290px;
+  width: 268px;
+  font-size: 16px;
+  line-height: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.focus-stat b.green { color: var(--primary-500); font-weight: 700; }
+.focus-stat b.purple { color: #9a9aff; font-weight: 700; }
+
+/* decorative flag sticker */
+.flag-wrap {
+  position: absolute;
+  left: 1506px;
+  top: 918px;
+  width: 196px;
+  height: 196px;
+  z-index: 6;
+  pointer-events: none;
+  /* hidden until the Player Focus panel is revealed */
+  opacity: 0;
+  transform: scale(0.4);
+  transform-origin: 50% 80%;
+  transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+/* pop in shortly AFTER the focus panel (which precedes it in the DOM) appears */
+.focus-panel.in ~ .flag-wrap {
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 0.9s;
+}
+.flag {
+  width: 100%;
+  height: 100%;
+  transform: rotate(8.16deg);
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.5));
+  animation: flagFloat 5s ease-in-out infinite;
+}
+@keyframes flagFloat {
+  0%, 100% { transform: rotate(8.16deg) translateY(0); }
+  50% { transform: rotate(8.16deg) translateY(-10px); }
+}
+
+/* ---------- preferred panels ---------- */
+.pref-panel { top: 1150px; width: 408px; height: 352px; }
+.pref-panel.genres { left: 756px; }
+.pref-panel.modes { left: 1200px; }
+.pref-panel .panel-title { position: absolute; left: 24px; top: 20px; }
+.pref-summary {
+  position: absolute;
+  right: 24px;
+  top: 68px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.genres .pref-summary { width: 236px; }
+.modes .pref-summary { width: 360px; }
+.ps-main { display: flex; gap: 4px; align-items: center; white-space: nowrap; }
+.ps-main .emoji { font-size: 32px; line-height: 1; }
+.ps-main b { font-weight: 700; font-size: 16px; line-height: 22px; }
+.ps-sub { font-size: 14px; line-height: 18px; color: var(--gray-300); text-align: right; white-space: nowrap; }
+.pref-divider {
+  position: absolute;
+  left: 24px;
+  top: 146px;
+  width: 360px;
+  height: 1px;
+  background: var(--gray-700);
+}
+.bars {
+  position: absolute;
+  left: 24px;
+  top: 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.bar-row { width: 360px; display: flex; gap: 8px; align-items: flex-end; }
+.bar-row > .bar-label { display: none; } /* label shown inside col below */
+.bar-label {
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--gray-300);
+}
+.bar-bottom {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  height: 12px; /* track height; the % label overflows upward without inflating the row */
+}
+/* restructure: put label above track */
+.bar-row { flex-direction: column; align-items: stretch; gap: 6px; }
+.bar-row > .bar-label { display: block; }
+.bar-inner { display: flex; gap: 8px; align-items: flex-end; }
+.track {
+  position: relative;
+  width: 292px;
+  height: 12px;
+  background: var(--gray-700);
+  overflow: hidden;
+}
+.fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 12px;
+  width: 0;
+  background: radial-gradient(circle at center, var(--primary-500) 0%, color-mix(in srgb, var(--primary-500) 78%, #fff) 50%, color-mix(in srgb, var(--primary-500) 55%, #fff) 100%);
+  transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pref-panel.in .fill { width: var(--w); }
+.pct {
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 22px;
+  text-align: right;
+  width: 60px;
+  flex-shrink: 0;
+}
+
+/* ---------- badge panel ---------- */
+.badge-panel {
+  left: 756px;
+  top: 1524px;
+  width: 852px;
+  height: 408px;
+}
+/* hovering a badge card also hovers this panel — keep the area neutral
+   (no green stroke) so badge-list interaction shows no light-green stroke */
+.badge-panel:hover {
+  border-color: var(--gray-700);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
+}
+.badge-panel .panel-title { position: absolute; left: 24px; top: 20px; }
+.badge-row {
+  position: absolute;
+  left: 24px;
+  top: 72px;
+  width: 827px;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+.badge-card {
+  width: 218px;
+  margin-right: -1px;
+  background: var(--gray-1000);
+  border: 1px solid var(--gray-600);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, z-index 0s;
+  position: relative;
+}
+.badge-card:hover {
+  transform: translateY(-8px);
+  /* green stroke removed per request — keep the neutral border */
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+.bc-media {
+  position: relative;
+  height: 166px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.bc-media::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+}
+/* gradient: solid at the top, fading out toward the bottom */
+.bc-media.purple::before { background: linear-gradient(180deg, #3d254d 0%, rgba(61, 37, 77, 0) 100%); }
+.bc-media.orange::before { background: linear-gradient(180deg, #3d1a0a 0%, rgba(61, 26, 10, 0) 100%); }
+
+/* uniform 126x126 badge slot — every badge renders at the same size */
+.bc-clip {
+  position: relative;
+  z-index: 1;
+  width: 126px;
+  height: 126px;
+  overflow: hidden;
+  filter: drop-shadow(0 8px 5px rgba(0, 0, 0, 0.28));
+  transition: transform 0.4s ease;
+}
+/* badge grows on hover (no glow) */
+.badge-card:hover .bc-clip {
+  transform: scale(1.08) rotate(-2deg);
+}
+.bc-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* badge1 art is small inside a wide (1024x585) canvas — zoom + offset
+   to fill the slot, matching the Figma crop so all 4 badges look equal */
+.bc-img.b1 {
+  position: absolute;
+  width: 224.07%;
+  height: 127.7%;
+  left: -60.83%;
+  top: -13.29%;
+  max-width: none;
+  object-fit: fill;
+}
+.bc-info {
+  height: 141px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+.new-badge {
+  width: 18px;
+  height: 18px;
+  background: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.new-badge img { width: 9px; height: 9px; }
+.bc-title { font-weight: 700; font-size: 16px; line-height: 22px; }
+.bc-date { font-size: 14px; line-height: 20px; color: var(--gray-300); }
+
+/* ===================== THEME SWITCHER ===================== */
+/* The button swaps between the two full theme screens. The original (theme A)
+   markup and layout are untouched; theme B is a separate view. */
+.stage-b {
+  display: none;
+  position: relative;
+  width: 100vw;
+  height: calc(100vw * 2130 / 1920);
+  overflow: hidden;
+}
+/* when theme B is active, hide theme A and show theme B */
+body.theme-inzoi .stage { display: none; }
+body.theme-inzoi .stage-b { display: block; }
+
+/* theme B kitsch background: heart/smile images pop up from below then fall back */
+.bg-particles {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+  display: none;
+}
+body.theme-inzoi .bg-particles { display: block; }
+.bg-particles .p {
+  position: absolute;
+  bottom: -14%;            /* start well below the viewport */
+  height: auto;
+  opacity: 0;
+  animation-name: pop;
+  animation-iteration-count: infinite;
+  /* rise = ease-out (decelerate toward the peak); the fall switches to ease-in below */
+  animation-timing-function: cubic-bezier(0.25, 0.6, 0.4, 1);
+  filter: drop-shadow(0 3px 6px rgba(236, 72, 153, 0.3));
+  will-change: transform, opacity;
+}
+.bg-particles .p.alt { animation-name: popAlt; }
+/* 뿅! pops up with an overshoot, arcs to its peak, then falls back down (gravity) */
+@keyframes pop {
+  0%   { transform: translate(0, 0) scale(0.2) rotate(-8deg); opacity: 0; }
+  7%   { transform: translate(2px, -9vh) scale(1.18) rotate(6deg); opacity: 1; }   /* pop overshoot */
+  13%  { transform: translate(0, -13vh) scale(0.96) rotate(0deg); opacity: 1; }
+  50%  { transform: translate(6px, calc(-1 * var(--peak, 60vh))) scale(1) rotate(8deg); opacity: 1;
+         animation-timing-function: cubic-bezier(0.55, 0, 0.9, 0.45); }            /* peak → gravity fall */
+  100% { transform: translate(10px, 6vh) scale(0.7) rotate(-10deg); opacity: 0; }  /* fall back below */
+}
+@keyframes popAlt {
+  0%   { transform: translate(0, 0) scale(0.2) rotate(8deg); opacity: 0; }
+  7%   { transform: translate(-3px, -9vh) scale(1.2) rotate(-7deg); opacity: 1; }
+  13%  { transform: translate(-2px, -13vh) scale(0.95) rotate(0deg); opacity: 1; }
+  50%  { transform: translate(-8px, calc(-1 * var(--peak, 60vh))) scale(1) rotate(-9deg); opacity: 1;
+         animation-timing-function: cubic-bezier(0.55, 0, 0.9, 0.45); }
+  100% { transform: translate(-14px, 6vh) scale(0.7) rotate(12deg); opacity: 0; }
+}
+
+/* fixed top-left button — overlays the viewport, does NOT affect the canvas layout */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 16px;
+  background: rgba(15, 15, 15, 0.82);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--primary-500);
+  border-radius: 999px;
+  color: #fff;
+  font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(var(--primary-rgb), 0.4);
+}
+.theme-toggle:active { transform: translateY(0); }
+.theme-toggle .ico {
+  font-size: 15px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ===================== THEME B (INZOI / Socializer) =====================
+   Light-pink re-skin that REUSES theme A's layout classes. All selectors are
+   scoped to .theme-b, so theme A is completely unaffected. */
+.frame.theme-b {
+  /* palette overrides */
+  --gray-1000: #ffffff;   /* badge card bg */
+  --gray-900:  #f8f8fc;   /* frame bg */
+  --gray-700:  #efdcea;   /* panel borders / dividers */
+  --gray-600:  #ead7e4;   /* tags / badge border */
+  --gray-500:  #efe3f6;
+  --gray-300:  #9b8fa6;   /* secondary text */
+  --gray-200:  #6f6378;
+  --primary-500: #ec4899; /* hot pink accent */
+  --primary-rgb: 236, 72, 153;
+  /* theme B display font = Fredoka (theme A uses Special Gothic Expanded One) */
+  --font-display: "Fredoka", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  /* the two role-mixed tokens: 'white' was used as TEXT, 'black' as SURFACE */
+  --white: #2a2230;       /* -> dark text */
+  --black: #ffffff;       /* -> white surfaces (panels) */
+  color: #2a2230;
+  background: transparent; /* light base is on the body; decorations on fixed .bg-fixed-b */
+}
+/* theme B light backdrop on the body so the fixed decorations show through */
+body.theme-inzoi { background-color: #f8f8fc; }
+
+/* top background decorations (from Figma) — FIXED to the viewport (theme B),
+   so they stay put while content scrolls. Lives outside the scaled frame. */
+.bg-fixed-b { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; display: none; }
+body.theme-inzoi .bg-fixed-b { display: block; }
+.bg-fixed-b .deco-scale {
+  position: absolute; top: 0; left: 0; width: 1920px; height: 2130px;
+  transform-origin: top left; transform: scale(var(--scale, 1));
+}
+.bg-fixed-b img { position: absolute; display: block; max-width: none; }
+/* "Star" frame from Figma (728:13819): 860x1021 at (0,0), star pre-clipped inside the SVG */
+.bg-fixed-b .d-star      { left: 0; top: 0; width: 860px; height: 1021px; }
+.bg-fixed-b .d-stroke    { left: -111px; top: -29px;  width: 2079px; height: 922px; }
+.bg-fixed-b .d-cloud1    { left: 1647px; top: 29px;   width: 339px;  height: 297px; }
+.bg-fixed-b .d-cloud2    { left: 1450px; top: 217px;  width: 269px;  height: 235px; }
+/* long bar (gapped fill + outline) drawn over the clouds → threads through the ring */
+.bg-fixed-b .d-bar         { left: 1580px; top: -29px; width: 388px;  height: 400px; }
+.bg-fixed-b .d-bar-outline { left: 1580px; top: -29px; width: 388px;  height: 400px; }
+/* role-flip exceptions (where --white/--black meant the opposite role) */
+/* buttons: black border + rounded; share = purple radial, change = white (match Figma B) */
+.theme-b .btn {
+  color: #000;
+  border: 1px solid #000;
+  font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Inter", sans-serif;
+  font-weight: 700;
+}
+.theme-b .btn-share { background: radial-gradient(circle at center, #be81ff 0%, #eac5ff 100%); }
+.theme-b .btn-change { background: #ffffff; }
+
+/* profile image: layered stacked-card backing (magenta / yellow / cyan) */
+.theme-b .cs { position: absolute; border: 1px solid #000; border-radius: 20px; }
+.theme-b .cs-cyan    { left: 327px; top: 205px; width: 375px; height: 408px; background: #c5faff; }
+.theme-b .cs-yellow  { left: 319px; top: 195px; width: 392px; height: 408px; background: #fff3b1; }
+.theme-b .cs-magenta { left: 312px; top: 186px; width: 408px; height: 408px; background: #ff70ff; }
+.theme-b .profile-photo { border: 1px solid #000; border-radius: 10px; }
+.theme-b .tape-text .ach { color: #2a2230; }
+.theme-b .mp-kv-fade {
+  background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.35) 55%, rgba(255, 255, 255, 0) 100%);
+}
+.theme-b .mp-kv img { width: 100%; height: 100%; left: 0; top: 0; transform: none; }
+/* top speech bubble: black pill + thought-bubble tail dots (match Figma B) */
+.theme-b .status-bar {
+  background: #000;
+  border: 1px solid #000;
+  border-radius: 60px;
+  width: auto;          /* hug the text like the design */
+  overflow: visible;
+}
+.theme-b .status-bar p { color: #fff; }
+.theme-b .status-caret { display: none; } /* replaced by the dot tail */
+.theme-b .bubble-tail {
+  position: absolute;
+  background: #000;
+  border: 1px solid #000;
+  border-radius: 50%;
+}
+.theme-b .bubble-tail.t1 { left: 338px; top: 150px; width: 18px; height: 18px; }
+.theme-b .bubble-tail.t2 { left: 355px; top: 169px; width: 12px; height: 12px; }
+.theme-b .user-num { background: #ffe1f0; color: #d61f8a; }
+/* lighter pill bg so the 🩷💬🩷 emoji stays visible */
+.theme-b .focus-pill { background: #ffd6ea; }
+/* Socializer peaks on 소셜/관계 → emphasize that axis instead of 성취/성장 */
+.theme-b .axis.a-top { color: var(--gray-300); font-weight: 400; }
+.theme-b .axis.a-l   { color: var(--white); font-weight: 700; }
+/* place the #tag right next to the username (instead of fixed far-right) */
+.theme-b .id-row {
+  position: absolute;
+  left: 756px;
+  top: 133px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.theme-b .id-row .username,
+.theme-b .id-row .user-num { position: static; left: auto; top: auto; }
+.theme-b .header-divider { background: #efdcea; }
+/* focus panel uses a hardcoded dark gradient in theme A — make it light here */
+.theme-b .focus-panel { background: linear-gradient(180deg, #ffffff 0%, #fdeef7 100%); }
+.theme-b .focus-desc { color: #6f6378; }
+.theme-b .bc-media.purple::before { background: linear-gradient(180deg, #f3e8ff 0%, rgba(243, 232, 255, 0) 100%); }
+.theme-b .bc-media.orange::before { background: linear-gradient(180deg, #ffe9d8 0%, rgba(255, 233, 216, 0) 100%); }
+/* recolour the green legend line to pink */
+.theme-b .focus-legend .lg:first-child img { filter: hue-rotate(200deg) saturate(1.4); }
+
+/* card hover shadows: soft pink instead of black */
+.theme-b .panel:hover {
+  box-shadow: 0 14px 40px rgba(var(--primary-rgb), 0.25), 0 0 0 1px rgba(var(--primary-rgb), 0.2);
+}
+.theme-b .badge-card:hover {
+  box-shadow: 0 16px 36px rgba(var(--primary-rgb), 0.28);
+}
+
+/* tape = two cloud layers: back solid-pink offset ~6px down (thick pink bottom),
+   front white-with-outline on top — "Socializer" in a rounded font */
+.theme-b .tape { height: 92px; filter: drop-shadow(0 6px 14px rgba(180, 80, 140, 0.3)); }
+.theme-b .tape-bg2 { position: absolute; left: 0; top: 8px; width: 100%; height: 80px; z-index: 0; }
+.theme-b .tape-bg  { position: absolute; left: 0; top: 0;   width: 100%; height: 80px; z-index: 1; }
+.theme-b .tape-text { position: relative; z-index: 2; }
+.theme-b .tape-text .ach { font-family: "Fredoka", "Apple SD Gothic Neo", sans-serif; font-weight: 600; }
+
+/* Fredoka is bold-rounded in the design — give the display elements weight 600 */
+.theme-b .username,
+.theme-b .user-num,
+.theme-b .since,
+.theme-b .since-date,
+.theme-b .pm-value,
+.theme-b .ticket-num,
+.theme-b .sp-top,
+.theme-b .sp-stat-value,
+.theme-b .mp-stat-value,
+.theme-b .panel-title,
+.theme-b .focus-pill,
+.theme-b .focus-name,
+.theme-b .pct { font-weight: 600; }
+
+/* radar is a single pre-rendered (pink) image instead of layered svgs */
+.theme-b .radar-mono {
+  position: absolute; left: 0; top: 0; width: 258px; height: 258px;
+  opacity: 0; transform: scale(0.2); transform-origin: center;
+}
+.theme-b .focus-panel.in .radar-mono {
+  animation: radarPopB 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+}
+@keyframes radarPopB {
+  0%   { opacity: 0; transform: scale(0.2); }
+  55%  { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* rounded corners — theme B uses soft radii (theme A stays sharp) */
+.theme-b .panel { border-radius: 12px; }
+.theme-b .most-played { border-radius: 12px; }      /* overflow:hidden clips the KV to rounded corners */
+.theme-b .btn { border-radius: 10px; }
+.theme-b .green-square { border-radius: 12px; }
+.theme-b .profile-photo { border-radius: 10px; }
+.theme-b .profile-photo img,
+.theme-b .profile-photo video { border-radius: 10px; }
+.theme-b .user-num { border-radius: 6px; }
+.theme-b .badge-card { border-radius: 12px; overflow: hidden; }
+.theme-b .track,
+.theme-b .fill { border-radius: 999px; }
+
+/* sticker (social/heart) replaces the helmet/flag */
+.theme-b .flag-wrap { left: 1514px; top: 918px; width: 224px; height: 224px; }
+.theme-b .flag {
+  transform: rotate(0deg);
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(180, 80, 140, 0.25));
+  animation: stickerFloat 5s ease-in-out infinite;
+}
+@keyframes stickerFloat {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  50% { transform: rotate(0deg) translateY(-10px); }
+}

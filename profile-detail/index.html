@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KUS · Player Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;700&family=Special+Gothic+Expanded+One&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <script>
+    /* apply the saved theme before paint so reload shows the right theme with no flash */
+    if (localStorage.getItem("kus-theme") === "b") document.body.classList.add("theme-inzoi");
+  </script>
+
+  <!-- theme A lightning backdrop, fixed to the viewport (stays put on scroll) -->
+  <div class="bg-fixed" aria-hidden="true">
+    <img src="assets/bg_glow.svg" alt="" />
+    <!-- electricity flowing along the #B0FFC4 shapes -->
+    <svg class="bolt-flow" viewBox="0 0 2331.85 795.775" preserveAspectRatio="none">
+      <path class="flow-path" pathLength="100" d="M275.5 196L258 146L290.5 142V192.5H370.5L526.5 174L508 253.5L480 307L578 317.5L564 352.5L560 381.5L599 385.5L657.5 431.5L594 391.5H546L560 352.5V330H442.5L482.5 268.5L499.5 242V190L365.5 217.5L275.5 196Z" />
+      <path class="flow-path p2" pathLength="100" d="M2098.84 503.913L2147.7 412.836L2119.65 384.032L2094.19 486.008L2053.16 443.012L2025.65 337.106L1941.81 399.77L1934.19 477.956L1873.13 527.942L1740.5 541.287L1881.96 541.286L1963.08 502.604L1950.48 419.215L2016.84 359.124L2030.22 458.186L2098.84 503.913Z" />
+    </svg>
+  </div>
+
+  <!-- theme B background shapes, fixed to the viewport (stays put on scroll) -->
+  <div class="bg-fixed-b" aria-hidden="true">
+    <div class="deco-scale">
+      <img class="d-star" src="assets/star_frame.svg" alt="" />
+      <img class="d-stroke" src="assets/bg_stroke.svg" alt="" />
+      <img class="d-cloud1" src="assets/bg_cloud1.svg" alt="" />
+      <img class="d-cloud2" src="assets/bg_cloud2.svg" alt="" />
+      <!-- long bar threading through the cloud ring: gapped bar over the clouds -->
+      <img class="d-bar" src="assets/bg_stroke_sm.svg" alt="" />
+      <img class="d-bar-outline" src="assets/bar_outline.svg" alt="" />
+    </div>
+  </div>
+
+  <!-- theme B kitsch background: hearts & smiles pop up then fall back (fixed) -->
+  <div class="bg-particles" aria-hidden="true">
+    <img class="p"     src="assets/heart.png" style="left:8%;  width:44px; --peak:58vh; animation-duration:2.9s; animation-delay:2s"   alt="" />
+    <img class="p alt" src="assets/smile.png" style="left:20%; width:34px; --peak:46vh; animation-duration:3.5s; animation-delay:2.4s" alt="" />
+    <img class="p"     src="assets/smile.png" style="left:32%; width:54px; --peak:70vh; animation-duration:3.1s; animation-delay:2.1s" alt="" />
+    <img class="p alt" src="assets/heart.png" style="left:45%; width:38px; --peak:52vh; animation-duration:3.8s; animation-delay:2.7s" alt="" />
+    <img class="p"     src="assets/heart.png" style="left:57%; width:30px; --peak:64vh; animation-duration:4s;   animation-delay:2.3s" alt="" />
+    <img class="p alt" src="assets/smile.png" style="left:69%; width:50px; --peak:66vh; animation-duration:3s;   animation-delay:2.5s" alt="" />
+    <img class="p"     src="assets/heart.png" style="left:81%; width:36px; --peak:44vh; animation-duration:3.6s; animation-delay:2.2s" alt="" />
+    <img class="p alt" src="assets/smile.png" style="left:90%; width:32px; --peak:60vh; animation-duration:3.4s; animation-delay:2.9s" alt="" />
+    <img class="p"     src="assets/heart.png" style="left:26%; width:46px; --peak:54vh; animation-duration:3.8s; animation-delay:2.6s" alt="" />
+  </div>
+
+  <div class="stage">
+    <div class="frame">
+      <!-- decorative background glow -->
+      <img class="bg-glow" src="assets/bg_glow.svg" alt="" />
+
+      <!-- ===================== LEFT PROFILE COLUMN ===================== -->
+      <!-- profile status -->
+      <div class="status-bar reveal">
+        <p data-text="PUBG only this week!  PUBG only this week! 🔥🔥"><span class="typed"></span><span class="caret"></span></p>
+      </div>
+      <img class="status-caret" src="assets/arrow.svg" alt="" />
+
+      <!-- profile image with green backing -->
+      <div class="green-square reveal"></div>
+      <div class="profile-photo reveal">
+        <video src="assets/pubg_profile.webm" autoplay loop muted playsinline></video>
+      </div>
+
+      <!-- diagonal Achiever tape -->
+      <div class="tape">
+        <img class="tape-bg" src="assets/tape.svg" alt="" />
+        <div class="tape-text">
+          <!-- first half -->
+          <span class="medal">🏅🏆🏅</span><span class="ach">Achiever</span>
+          <span class="medal">🏅🏆🏅</span><span class="ach">Achiever</span>
+          <span class="medal">🏅🏆🏅</span><span class="ach">Achiever</span>
+          <!-- second half (identical) → enables seamless -50% loop -->
+          <span class="medal">🏅🏆🏅</span><span class="ach">Achiever</span>
+          <span class="medal">🏅🏆🏅</span><span class="ach">Achiever</span>
+          <span class="medal">🏅🏆🏅</span><span class="ach">Achiever</span>
+        </div>
+      </div>
+
+      <!-- buttons -->
+      <button class="btn btn-share reveal">프로필 공유하기</button>
+      <button class="btn btn-change reveal">프로필 이미지 변경</button>
+
+      <!-- ===================== HEADER ===================== -->
+      <p class="username reveal seq">UseridUseridUseridUseridUseridUserid</p>
+      <div class="user-num reveal seq">#0001</div>
+
+      <div class="player-meta reveal seq">
+        <div class="pm-item">
+          <span class="pm-label">플레이어</span>
+          <span class="pm-value">Since 2024.02.13</span>
+        </div>
+        <div class="pm-item">
+          <span class="pm-label">보유 티켓</span>
+          <span class="pm-ticket">
+            <img src="assets/ticket.png" alt="ticket" /><span class="pm-value">7</span>
+          </span>
+        </div>
+      </div>
+      <div class="header-divider"></div>
+      <div class="header-divider-glow"></div>
+
+      <!-- ===================== TOP STATS PANEL ===================== -->
+      <div class="panel stats-panel reveal seq">
+        <div class="sp-rank">
+          <span class="sp-top">Top 4%</span>
+          <div class="sp-rank-txt">
+            <p class="sp-rank-title">Hardcore Gamer</p>
+            <p class="sp-rank-sub">크래프톤 유저 중 <b>상위 4%</b> 플레이 시간</p>
+          </div>
+        </div>
+        <span class="v-divider"></span>
+        <div class="sp-stat">
+          <p class="sp-stat-label">주간 플레이</p>
+          <p class="sp-stat-value">30H+</p>
+        </div>
+        <div class="sp-stat">
+          <p class="sp-stat-label">총 플레이</p>
+          <p class="sp-stat-value">4,280H</p>
+        </div>
+      </div>
+
+      <!-- ===================== MOST PLAYED ===================== -->
+      <div class="panel most-played reveal seq">
+        <div class="mp-kv">
+          <img src="assets/pubg_kv.jpg" alt="" />
+          <span class="mp-kv-fade"></span>
+        </div>
+        <p class="panel-title mp-title">Most Played</p>
+        <img class="mp-logo" src="assets/pubg_logo.png" alt="PUBG BATTLEGROUNDS" />
+        <div class="mp-stats">
+          <div class="mp-stat"><p class="sp-stat-label">주간 플레이</p><p class="mp-stat-value">30H+</p></div>
+          <span class="v-divider"></span>
+          <div class="mp-stat"><p class="sp-stat-label">총 플레이</p><p class="mp-stat-value">3,840H</p></div>
+          <span class="v-divider"></span>
+          <div class="mp-stat"><p class="sp-stat-label">상위</p><p class="mp-stat-value">0.8%</p></div>
+        </div>
+      </div>
+
+      <!-- ===================== PLAYER FOCUS ===================== -->
+      <div class="panel focus-panel reveal seq">
+        <p class="panel-title focus-title">Player Focus</p>
+        <div class="focus-legend">
+          <span class="lg"><img src="assets/legend_green.svg" alt="" />나의 성향</span>
+          <span class="lg"><img src="assets/legend_gray.svg" alt="" />크래프톤 평균</span>
+        </div>
+
+        <!-- radar -->
+        <div class="radar">
+          <img class="radar-grid" src="assets/radar_grid.svg" alt="" />
+          <img class="radar-avg" src="assets/radar_avg.svg" alt="" />
+          <img class="radar-user" src="assets/radar_user.svg" alt="" />
+          <img class="radar-dot d1" src="assets/dot.svg" alt="" />
+          <img class="radar-dot d2" src="assets/dot.svg" alt="" />
+        </div>
+        <!-- radar axis labels -->
+        <p class="axis a-top">📈 성취/성장</p>
+        <p class="axis a-tr">🥇 경쟁/승부</p>
+        <p class="axis a-r">📖 몰입/스토리</p>
+        <p class="axis a-br">🧭 자유도/탐험</p>
+        <p class="axis a-bl">🛠️ 창작/제작</p>
+        <p class="axis a-l">🤝 소셜/관계</p>
+        <p class="axis a-tl">😌 힐링/휴식</p>
+
+        <!-- focus description -->
+        <div class="focus-pill">🏅🏆🏅</div>
+        <p class="focus-name">Achiever</p>
+        <p class="focus-desc">목표 달성과 성장에서 가장 큰 재미를 느끼는 타입. 보상과 레벨업이 원동력이에요.</p>
+        <div class="focus-stat">
+          <p><span>성취/성장</span> 성향이 크래프톤 평균보다<br /><b class="green">40%</b> 높아요.</p>
+          <p><span>성취/성장</span>과 <span>몰입/스토리</span>를 동시에<br />즐기는 유저는 전체의 <b class="purple">7%</b>예요.</p>
+        </div>
+      </div>
+
+      <!-- decorative flag sticker (appears after the Player Focus panel) -->
+      <div class="flag-wrap">
+        <img class="flag" src="assets/flag.png" alt="" />
+      </div>
+
+      <!-- ===================== PREFERRED GENRES ===================== -->
+      <div class="panel pref-panel genres reveal seq">
+        <p class="panel-title">Preferred Genres</p>
+        <div class="pref-summary">
+          <div class="ps-main"><span class="emoji">🎯</span><b>슈팅/배틀로얄/익스트랙션</b></div>
+          <p class="ps-sub">크래프톤 유저 4명 중 1명이 같은 장르를 즐겨요</p>
+        </div>
+        <span class="pref-divider"></span>
+        <div class="bars">
+          <div class="bar-row"><p class="bar-label">슈팅/배틀로얄/익스트랙션</p><div class="bar-bottom"><div class="track"><span class="fill" style="--w:87px"></span></div><span class="pct">28%</span></div></div>
+          <div class="bar-row"><p class="bar-label">액션/액션 RPG/소울라이크/로그라이크/핵앤슬래시</p><div class="bar-bottom"><div class="track"><span class="fill" style="--w:76px"></span></div><span class="pct">22%</span></div></div>
+          <div class="bar-row"><p class="bar-label">전략/MOBA/카드/보드/덱빌딩</p><div class="bar-bottom"><div class="track"><span class="fill" style="--w:67px"></span></div><span class="pct">18%</span></div></div>
+        </div>
+      </div>
+
+      <!-- ===================== PREFERRED MODE ===================== -->
+      <div class="panel pref-panel modes reveal seq">
+        <p class="panel-title">Preferred Mode</p>
+        <div class="pref-summary">
+          <div class="ps-main"><span class="emoji">⚔️</span><b>혼자서 몰입하는 PvE</b></div>
+          <p class="ps-sub">크래프톤 유저 135명 중 1명이 같은 모드를 즐겨요</p>
+        </div>
+        <span class="pref-divider"></span>
+        <div class="bars">
+          <div class="bar-row"><p class="bar-label">실력을 증명하는 솔로 랭크 PvP</p><div class="bar-bottom"><div class="track"><span class="fill" style="--w:138px"></span></div><span class="pct">46%</span></div></div>
+          <div class="bar-row"><p class="bar-label">동료와 힘을 합치는 협동 PvE</p><div class="bar-bottom"><div class="track"><span class="fill" style="--w:57px"></span></div><span class="pct">15%</span></div></div>
+          <div class="bar-row"><p class="bar-label">팀워크로 승리하는 멀티 PvP</p><div class="bar-bottom"><div class="track"><span class="fill" style="--w:28px"></span></div><span class="pct">8%</span></div></div>
+        </div>
+      </div>
+
+      <!-- ===================== BADGE ===================== -->
+      <div class="panel badge-panel reveal seq">
+        <p class="panel-title">Badge</p>
+        <div class="badge-row">
+          <div class="badge-card">
+            <div class="bc-media purple"><span class="bc-clip"><img class="bc-img" src="assets/badge.png" alt="badge" /></span></div>
+            <div class="bc-info">
+              <span class="new-badge"><img src="assets/n_badge.svg" alt="N" /></span>
+              <p class="bc-title">Playtest Ascend to ZERO!</p>
+              <p class="bc-date">2026.05.18</p>
+            </div>
+          </div>
+          <div class="badge-card">
+            <div class="bc-media orange"><span class="bc-clip"><img class="bc-img b1" src="assets/badge1.png" alt="badge" /></span></div>
+            <div class="bc-info">
+              <span class="new-badge"><img src="assets/n_badge.svg" alt="N" /></span>
+              <p class="bc-title">MIMESIS BETA TESTER</p>
+              <p class="bc-date">2026.05.18</p>
+            </div>
+          </div>
+          <div class="badge-card">
+            <div class="bc-media purple"><span class="bc-clip"><img class="bc-img" src="assets/badge.png" alt="badge" /></span></div>
+            <div class="bc-info">
+              <p class="bc-title">Playtest Ascend to ZERO!</p>
+              <p class="bc-date">2026.05.18</p>
+            </div>
+          </div>
+          <div class="badge-card">
+            <div class="bc-media orange"><span class="bc-clip"><img class="bc-img b1" src="assets/badge1.png" alt="badge" /></span></div>
+            <div class="bc-info">
+              <p class="bc-title">MIMESIS BETA TESTER</p>
+              <p class="bc-date">2026.05.18</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- theme B (INZOI / Socializer) — separate view, shown when theme is switched -->
+  <div class="stage-b" aria-hidden="true">
+    <div class="frame theme-b">
+      <!-- decorative background glow -->
+
+      <!-- ===================== LEFT PROFILE COLUMN ===================== -->
+      <!-- profile status -->
+      <div class="status-bar reveal">
+        <p data-text="Hey everyone, good to see you here.😉😉"><span class="typed"></span><span class="caret"></span></p>
+      </div>
+      <img class="status-caret" src="assets/arrow.svg" alt="" />
+      <span class="bubble-tail t1 reveal"></span>
+      <span class="bubble-tail t2 reveal"></span>
+
+      <!-- profile image with green backing -->
+      <div class="cs cs-cyan reveal"></div>
+      <div class="cs cs-yellow reveal"></div>
+      <div class="cs cs-magenta reveal"></div>
+      <div class="profile-photo reveal">
+        <video src="assets/inzoi_profile.webm" autoplay loop muted playsinline></video>
+      </div>
+
+      <!-- diagonal Socializer tape -->
+      <div class="tape">
+        <img class="tape-bg2" src="assets/b_tape2.svg" alt="" />
+        <img class="tape-bg" src="assets/b_tape.svg" alt="" />
+        <div class="tape-text">
+          <!-- first half -->
+          <span class="medal">🩷💬🩷</span><span class="ach">Socializer</span>
+          <span class="medal">🩷💬🩷</span><span class="ach">Socializer</span>
+          <span class="medal">🩷💬🩷</span><span class="ach">Socializer</span>
+          <!-- second half (identical) → enables seamless -50% loop -->
+          <span class="medal">🩷💬🩷</span><span class="ach">Socializer</span>
+          <span class="medal">🩷💬🩷</span><span class="ach">Socializer</span>
+          <span class="medal">🩷💬🩷</span><span class="ach">Socializer</span>
+        </div>
+      </div>
+
+      <!-- buttons -->
+      <button class="btn btn-share reveal">프로필 공유하기</button>
+      <button class="btn btn-change reveal">프로필 이미지 변경</button>
+
+      <!-- ===================== HEADER ===================== -->
+      <div class="id-row">
+        <p class="username reveal seq">UseridUseridUseridUseridUseridUserid</p>
+        <div class="user-num reveal seq">#0001</div>
+      </div>
+
+      <div class="player-meta reveal seq">
+        <div class="pm-item">
+          <span class="pm-label">플레이어</span>
+          <span class="pm-value">Since 2024.02.13</span>
+        </div>
+        <div class="pm-item">
+          <span class="pm-label">보유 티켓</span>
+          <span class="pm-ticket">
+            <img src="assets/ticket.png" alt="ticket" /><span class="pm-value">7</span>
+          </span>
+        </div>
+      </div>
+      <div class="header-divider"></div>
+      <div class="header-divider-glow"></div>
+
+      <!-- ===================== TOP STATS PANEL ===================== -->
+      <div class="panel stats-panel reveal seq">
+        <div class="sp-rank">
+          <span class="sp-top">Top 4%</span>
+          <div class="sp-rank-txt">
+            <p class="sp-rank-title">Hardcore Gamer</p>
+            <p class="sp-rank-sub">크래프톤 유저 중 <b>상위 4%</b> 플레이 시간</p>
+          </div>
+        </div>
+        <span class="v-divider"></span>
+        <div class="sp-stat">
+          <p class="sp-stat-label">주간 플레이</p>
+          <p class="sp-stat-value">30H+</p>
+        </div>
+        <div class="sp-stat">
+          <p class="sp-stat-label">총 플레이</p>
+          <p class="sp-stat-value">4,280H</p>
+        </div>
+      </div>
+
+      <!-- ===================== MOST PLAYED ===================== -->
+      <div class="panel most-played reveal seq">
+        <div class="mp-kv">
+          <img src="assets/b_kv.png" alt="" />
+          <span class="mp-kv-fade"></span>
+        </div>
+        <p class="panel-title mp-title">Most Played</p>
+        <img class="mp-logo" src="assets/b_logo.png" alt="INZOI" />
+        <div class="mp-stats">
+          <div class="mp-stat"><p class="sp-stat-label">주간 플레이</p><p class="mp-stat-value">30H+</p></div>
+          <span class="v-divider"></span>
+          <div class="mp-stat"><p class="sp-stat-label">총 플레이</p><p class="mp-stat-value">3,840H</p></div>
+          <span class="v-divider"></span>
+          <div class="mp-stat"><p class="sp-stat-label">상위</p><p class="mp-stat-value">0.8%</p></div>
+        </div>
+      </div>
+
+      <!-- ===================== PLAYER FOCUS ===================== -->
+      <div class="panel focus-panel reveal seq">
+        <p class="panel-title focus-title">Player Focus</p>
+        <div class="focus-legend">
+          <span class="lg"><img src="assets/legend_green.svg" alt="" />나의 성향</span>
+          <span class="lg"><img src="assets/legend_gray.svg" alt="" />크래프톤 평균</span>
+        </div>
+
+        <!-- radar -->
+        <div class="radar"><img class="radar-mono" src="assets/b_radar.png" alt="radar" /></div>
+        <!-- radar axis labels -->
+        <p class="axis a-top">📈 성취/성장</p>
+        <p class="axis a-tr">🥇 경쟁/승부</p>
+        <p class="axis a-r">📖 몰입/스토리</p>
+        <p class="axis a-br">🧭 자유도/탐험</p>
+        <p class="axis a-bl">🛠️ 창작/제작</p>
+        <p class="axis a-l">🤝 소셜/관계</p>
+        <p class="axis a-tl">😌 힐링/휴식</p>
+
+        <!-- focus description -->
+        <div class="focus-pill">🩷💬🩷</div>
+        <p class="focus-name">Socializer</p>
+        <p class="focus-desc">목표 달성과 성장에서 가장 큰 재미를 느끼는 타입. 보상과 레벨업이 원동력이에요.</p>
+        <div class="focus-stat">
+          <p><span>소셜/관계</span> 성향이 크래프톤 평균보다<br /><b class="green">15%</b> 높아요.</p>
+          <p><span>소셜/관계</span>과 <span>몰입/스토리</span>를 동시에<br />즐기는 유저는 전체의 <b class="purple">12%</b>예요.</p>
+        </div>
+      </div>
+
+      <!-- decorative flag sticker (appears after the Player Focus panel) -->
+      <div class="flag-wrap">
+        <img class="flag" src="assets/b_sticker.png" alt="" />
+      </div>
+
+      <!-- ===================== PREFERRED GENRES ===================== -->
+      <div class="panel pref-panel genres reveal seq">
+        <p class="panel-title">Preferred Genres</p>
+        <div class="pref-summary">
+          <div class="ps-main"><span class="emoji">🎯</span><b>슈팅/배틀로얄/익스트랙션</b></div>
+          <p class="ps-sub">크래프톤 유저 4명 중 1명이 같은 장르를 즐겨요</p>
+        </div>
+        <span class="pref-divider"></span>
+        <div class="bars">
+          <div class="bar-row"><p class="bar-label">슈팅/배틀로얄/익스트랙션</p><div class="bar-bottom"><div class="track"><span class="fill" style="--w:87px"></span></div><span class="pct">28%</span></div></div>
+          <div class="bar-row"><p class="bar-label">액션/액션 RPG/소울라이크/로그라이크/핵앤슬래시</p><div class="bar-bottom"><div class="track"><span class="fill" style="--w:76px"></span></div><span class="pct">22%</span></div></div>
+          <div class="bar-row"><p class="bar-label">전략/MOBA/카드/보드/덱빌딩</p><div class="bar-bottom"><div class="track"><span class="fill" style="--w:67px"></span></div><span class="pct">18%</span></div></div>
+        </div>
+      </div>
+
+      <!-- ===================== PREFERRED MODE ===================== -->
+      <div class="panel pref-panel modes reveal seq">
+        <p class="panel-title">Preferred Mode</p>
+        <div class="pref-summary">
+          <div class="ps-main"><span class="emoji">⚔️</span><b>혼자서 몰입하는 PvE</b></div>
+          <p class="ps-sub">크래프톤 유저 135명 중 1명이 같은 모드를 즐겨요</p>
+        </div>
+        <span class="pref-divider"></span>
+        <div class="bars">
+          <div class="bar-row"><p class="bar-label">실력을 증명하는 솔로 랭크 PvP</p><div class="bar-bottom"><div class="track"><span class="fill" style="--w:138px"></span></div><span class="pct">46%</span></div></div>
+          <div class="bar-row"><p class="bar-label">동료와 힘을 합치는 협동 PvE</p><div class="bar-bottom"><div class="track"><span class="fill" style="--w:57px"></span></div><span class="pct">15%</span></div></div>
+          <div class="bar-row"><p class="bar-label">팀워크로 승리하는 멀티 PvP</p><div class="bar-bottom"><div class="track"><span class="fill" style="--w:28px"></span></div><span class="pct">8%</span></div></div>
+        </div>
+      </div>
+
+      <!-- ===================== BADGE ===================== -->
+      <div class="panel badge-panel reveal seq">
+        <p class="panel-title">Badge</p>
+        <div class="badge-row">
+          <div class="badge-card">
+            <div class="bc-media purple"><span class="bc-clip"><img class="bc-img" src="assets/badge.png" alt="badge" /></span></div>
+            <div class="bc-info">
+              <span class="new-badge"><img src="assets/n_badge.svg" alt="N" /></span>
+              <p class="bc-title">Playtest Ascend to ZERO!</p>
+              <p class="bc-date">2026.05.18</p>
+            </div>
+          </div>
+          <div class="badge-card">
+            <div class="bc-media orange"><span class="bc-clip"><img class="bc-img b1" src="assets/badge1.png" alt="badge" /></span></div>
+            <div class="bc-info">
+              <span class="new-badge"><img src="assets/n_badge.svg" alt="N" /></span>
+              <p class="bc-title">MIMESIS BETA TESTER</p>
+              <p class="bc-date">2026.05.18</p>
+            </div>
+          </div>
+          <div class="badge-card">
+            <div class="bc-media purple"><span class="bc-clip"><img class="bc-img" src="assets/badge.png" alt="badge" /></span></div>
+            <div class="bc-info">
+              <p class="bc-title">Playtest Ascend to ZERO!</p>
+              <p class="bc-date">2026.05.18</p>
+            </div>
+          </div>
+          <div class="badge-card">
+            <div class="bc-media orange"><span class="bc-clip"><img class="bc-img b1" src="assets/badge1.png" alt="badge" /></span></div>
+            <div class="bc-info">
+              <p class="bc-title">MIMESIS BETA TESTER</p>
+              <p class="bc-date">2026.05.18</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- fixed overlay button — independent of the scaled canvas layout -->
+  <button id="theme-toggle" class="theme-toggle" type="button" aria-label="테마 변경">
+    <span class="ico">⇆</span>테마 변경
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
