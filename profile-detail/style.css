@@ -44,9 +44,9 @@ body {
 /* Theme A: dark backdrop (the lightning sits on the fixed .bg-fixed layer) */
 body:not(.theme-inzoi) { background-color: #0f0f0f; } /* Figma gray/1000 */
 
-/* Theme A: hammer cursor everywhere (overrides pointer on buttons too) */
+/* Theme A: PUBG frying-pan cursor everywhere (overrides pointer on buttons too) */
 body:not(.theme-inzoi),
-body:not(.theme-inzoi) * { cursor: url("assets/hammer-cursor.svg") 9 7, auto; }
+body:not(.theme-inzoi) * { cursor: url("assets/pubg_cursor_50.png") 24 21, auto; }
 /* Theme B: heart cursor everywhere */
 body.theme-inzoi,
 body.theme-inzoi * { cursor: url("assets/heart-cursor.svg") 17 15, auto; }
