@@ -47,9 +47,9 @@ body:not(.theme-inzoi) { background-color: #0f0f0f; } /* Figma gray/1000 */
 /* Theme A: PUBG frying-pan cursor everywhere (overrides pointer on buttons too) */
 body:not(.theme-inzoi),
 body:not(.theme-inzoi) * { cursor: url("assets/pubg_cursor_50.png") 24 21, auto; }
-/* Theme B: heart cursor everywhere */
+/* Theme B: cat-paw cursor everywhere (cat_cursor.png, tilted 45° left, 50px) */
 body.theme-inzoi,
-body.theme-inzoi * { cursor: url("assets/heart-cursor.svg") 17 15, auto; }
+body.theme-inzoi * { cursor: url("assets/cat_cursor_60.png") 30 30, auto; }
 
 /* Theme A updated card colors (Figma 663:16169) — color only, scoped to theme A */
 body:not(.theme-inzoi) .panel { background: #1c1c1c; }            /* cards: gray/800 (was #000) */
